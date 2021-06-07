@@ -1,0 +1,67 @@
+/* Styles for development purposes only */
+body {
+  font-family: Roboto;
+}
+
+header {
+  background-color: #5b2963;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+header h1 {
+  font-weight: 200;
+  color: white;
+  font-size: 48px;
+}
+
+/* Real styles */
+
+@import "~react-image-gallery/styles/scss/image-gallery.scss";
+
+body {
+	margin: 0;
+}
+
+body, main {
+	overflow-x: hidden;
+}
+
+label {
+	display: block;
+}
+
+input, button, select, textarea {
+	font-family: inherit;
+	font-size: inherit;
+	-webkit-padding: 0.4em 0;
+	padding: 0.4em;
+	margin: 0 0 0.5em 0;
+	box-sizing: border-box;
+	border: 1px solid #ccc;
+	border-radius: 2px;
+}
+
+input:disabled {
+	color: #ccc;
+}
+
+button {
+	color: #333;
+	background-color: #f4f4f4;
+	outline: none;
+}
+
+button:disabled {
+	color: #999;
+}
+
+button:not(:disabled):active {
+	background-color: #ddd;
+}
+
+button:focus {
+	border-color: #666;
+}
