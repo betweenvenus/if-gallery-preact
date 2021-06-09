@@ -22,8 +22,11 @@
   },
   "dependencies": {
     "@material-ui/core": "^4.11.4",
+    "@types/he": "^1.1.1",
     "@types/material-ui": "^0.21.8",
+    "@types/react": "^17.0.10",
     "@types/react-image-gallery": "^1.0.3",
+    "he": "^1.2.0",
     "preact": "^10.3.1",
     "preact-render-to-string": "^5.1.4",
     "react-image-gallery": "^1.1.1"
