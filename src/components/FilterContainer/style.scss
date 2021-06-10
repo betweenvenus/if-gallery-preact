@@ -1,0 +1,22 @@
+.filter-container {
+	padding: 40px 20px;
+	background-color: #ededed;
+}
+
+.filter-container .market-chips-container {
+	// max-width: 1000px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content:  flex-start;
+}
+
+.filter-container .market-chip {
+	margin: 10px 10px;
+	font-size: 14px;
+}
+
+.filter-container .formControl {
+	min-width: 200px;
+	margin-bottom: 20px;
+	margin-left: 20px;
+}
