@@ -84,12 +84,12 @@ time,
 mark,
 audio,
 video {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
-    font: inherit;
-    vertical-align: baseline;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  // font-size: 100%;
+  // font: inherit;
+  vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
 article,
@@ -103,29 +103,29 @@ hgroup,
 menu,
 nav,
 section {
-    display: block;
+  display: block;
 }
 body {
-    line-height: 1;
+  line-height: 1;
 }
 ol,
 ul {
-    list-style: none;
+  list-style: none;
 }
 blockquote,
 q {
-    quotes: none;
+  quotes: none;
 }
 blockquote:before,
 blockquote:after,
 q:before,
 q:after {
-    content: "";
-    content: none;
+  content: "";
+  content: none;
 }
 table {
-    border-collapse: collapse;
-    border-spacing: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 
 /* Styles for development purposes only */
@@ -133,108 +133,116 @@ table {
 $purple: #682875;
 
 body {
-    font-family: Helvetica;
-    font-weight: 200;
+  font-family: Helvetica;
+  font-weight: 200;
 }
 
 header {
-    background-color: #5b2963;
-    height: 300px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  background-color: #5b2963;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 header h1 {
-    font-weight: 200;
-    color: white;
-    font-size: 48px;
+  font-weight: 200;
+  color: white;
+  font-size: 48px;
 }
 
 /* Real styles */
 
 @import "~react-image-gallery/styles/scss/image-gallery.scss";
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;400&display=swap');
-
+// @import "https://fonts.googleapis.com/css2?family=Roboto:wght@100;400&display=swap";
 
 body {
-    margin: 0;
-		font-family: "Roboto Light", Helvetica, Arial, sans;
-		font-weight: 400;
+  margin: 0;
+  font-family: "Roboto Light", Helvetica, Arial, sans;
+  font-weight: 400;
 }
 
 body,
 main {
-    overflow-x: hidden;
+  overflow-x: hidden;
 }
 
 label {
-    display: block;
+  display: block;
 }
 
 input,
 button,
 select,
 textarea {
-    font-family: inherit;
-    font-size: inherit;
-    -webkit-padding: 0.4em 0;
-    padding: 0.4em;
-    margin: 0 0 0.5em 0;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 2px;
+  font-family: inherit;
+  font-size: inherit;
+  -webkit-padding: 0.4em 0;
+  padding: 0.4em;
+  margin: 0 0 0.5em 0;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 2px;
 }
 
 input:disabled {
-    color: #ccc;
+  color: #ccc;
 }
 
 button {
-    color: #333;
-    background-color: #f4f4f4;
-    outline: none;
+  color: #333;
+  background-color: #f4f4f4;
+  outline: none;
 }
 
 button:disabled {
-    color: #999;
+  color: #999;
 }
 
 button:not(:disabled):active {
-    background-color: #ddd;
+  background-color: #ddd;
 }
 
 button:focus {
-    border-color: #666;
+  border-color: #666;
 }
 
 .gallery-thumbnails {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    list-style-type: none;
-    margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  flex-flow: column;
+  flex-wrap: wrap;
+  list-style-type: none;
+  margin: 0 auto;
 }
 
 .gallery-thumbnails li,
 .gallery-thumbnails .fallback {
-    width: 350px;
-    height: 400px;
-    margin: 40px;
-    overflow: hidden;
+  width: 350px;
+  // height: 400px;
+  margin: 40px;
+  overflow: hidden;
+}
+
+.gallery-thumbnails li {
+  transition: opacity 0.25s ease-out;
+}
+
+.gallery-thumbnails li:hover {
+  opacity: 0.75;
 }
 
 .gallery-thumbnails img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .image-gallery-icon:hover {
-    color: $purple;
+  color: $purple;
 }
 
 .image-gallery-thumbnail.active,
 .image-gallery-thumbnail:hover {
-    border-color: $purple;
+  border-color: $purple;
 }

@@ -3,19 +3,15 @@ import { WPTerm } from "../../types/Gallery";
 import { decode } from "he";
 import { h } from "preact";
 import styles from "./style.scss";
+import { StateUpdater } from "preact/hooks";
+import { useEffect } from "react";
 
 interface MarketChipProps {
-	market: WPTerm<"market">;
-	active: boolean;
+  market: WPTerm<"market">;
 }
 
-  const toggle = () => {
-    // active ? setColor("default") : setColor("primary");
-    // setActive(!active);
-  };
-
-export default ({ market, active }: MarketChipProps) => {
-	const color = active ? "primary" : "default";
+export default ({ market }: MarketChipProps) => {
+  const color = market.active ? "primary" : "default";
   return (
     <Chip
       className={styles.marketChip}
@@ -24,4 +20,4 @@ export default ({ market, active }: MarketChipProps) => {
       clickable
     />
   );
-}
+};

@@ -54,6 +54,7 @@ interface BaseWPTerm {
     name: string;
     slug: string;
     count: number;
+		active?: boolean;
 }
 
 type WPTermWithID = BaseWPTerm & {
@@ -74,6 +75,7 @@ export interface Gallery {
     title: {
         rendered: string;
     };
+		id: number;
     acf: {
         photos: GalleryPhoto[];
     };
@@ -81,4 +83,8 @@ export interface Gallery {
         market: WPTerm<"market">[];
         client: WPTerm<"client">[];
     };
+}
+
+export interface GroupedGallery {
+	[term: string]: Gallery[];
 }
