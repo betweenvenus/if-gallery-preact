@@ -42,9 +42,6 @@ export function App() {
 
   return (
     <div>
-      <header>
-        <h1>Gallery</h1>
-      </header>
       <FilterContainer
         allMarkets={markets}
         allGalleries={galleries}
