@@ -1,24 +1,20 @@
-import { Gallery, GroupedGallery, WPTerm } from "../../types/Gallery";
-import { Select, InputLabel, MenuItem, FormControl } from "@material-ui/core";
+import {
+  AllGalleries,
+  Gallery,
+  GroupedGallery,
+  WPTerm,
+} from "../../../types/Gallery";
+import { Select, InputLabel, MenuItem, FormControl, Link } from "@material-ui/core";
 import { h } from "preact";
 import { StateUpdater, useEffect, useState } from "preact/hooks";
 import styles from "./style.scss";
-import MarketChip from "./MarketChip";
-import { filterGalleriesByTerms } from "../../util/util";
+import MarketChip from "../MarketFilter/MarketChip";
+import { filterGalleriesByTerms } from "../../../util/util";
 import { groupBy } from "lodash";
-
-const filterGalleriesByMarket = (
-  gallery: Gallery,
-  markets: WPTerm<"market">[]
-) => {
-  const galleryMarkets: WPTerm<"market">[] = gallery.terms.market;
-  for (const market of galleryMarkets) {
-    if (galleryMarkets.find((m) => m.slug === market.slug)?.active) return true;
-  }
-};
+import { SyntheticEvent } from "react";
 
 interface FilterContainerProps {
-  setGalleries: StateUpdater<GroupedGallery>;
+  setGalleries: StateUpdater<AllGalleries>;
   allGalleries: GroupedGallery;
   allMarkets: WPTerm<"market">[];
   allClients: WPTerm<"client">[];
@@ -28,7 +24,6 @@ interface FilterContainerProps {
 
 export default ({
   allMarkets,
-  allGalleries,
   setGalleries,
   filterMode,
   setFilterMode,
@@ -38,6 +33,8 @@ export default ({
 
   const [activeTerms, setActiveTerms] = useState<string[]>([]);
 
+	useEffect(() => console.log(allClients), [allClients])
+
   useEffect(() => {
     setActiveTerms(
       marketsList.filter(({ active }) => active).map(({ slug }) => slug)
@@ -45,7 +42,14 @@ export default ({
   }, [marketsList]);
 
   useEffect(() => {
-    setGalleries(filterGalleriesByTerms(allGalleries, activeTerms));
+    setGalleries((prev: AllGalleries) => {
+      return {
+        original: [...prev.original],
+        grouped: { ...prev.grouped },
+        filtered: filterGalleriesByTerms(prev.grouped, activeTerms),
+				current: prev.current
+      };
+    });
   }, [activeTerms]);
 
   const setAllMarketsActive = (market: WPTerm<"market">): WPTerm<"market"> => {
@@ -87,10 +91,15 @@ export default ({
             <Select
               labelId="filter-selector"
               value={filterMode}
-              onChange={(e) => setFilterMode(e.target.value as "market" | "client")}
+              onChange={(e) =>
+                setFilterMode(e.target.value as "market" | "client")
+              }
             >
               <MenuItem value={"market"} className={styles.filterSelectItem}>
                 Markets
+              </MenuItem>
+              <MenuItem value={"client"} className={styles.filterSelectItem}>
+                Clients
               </MenuItem>
             </Select>
           </FormControl>
@@ -107,7 +116,9 @@ export default ({
             <Select
               labelId="filter-selector"
               value={filterMode}
-              onChange={(e) => setFilterMode(e.target.value as "market" | "client")}
+              onChange={(e) =>
+                setFilterMode(e.target.value as "market" | "client")
+              }
             >
               <MenuItem value={"market"} className={styles.filterSelectItem}>
                 Markets
@@ -116,19 +127,22 @@ export default ({
                 Clients
               </MenuItem>
             </Select>
-            <div>
+          </FormControl>
+            <div className={styles.clientFilters}>
               {Object.entries(groupedClients).map(([key, clients]) => (
-                <div>
-                  <strong>{key}</strong>
+                <div className={styles.clientFilterSection}>
+                  <h2>{key}</h2>
                   <ul>
                     {clients.map((c) => (
-                      <li>{c.name}</li>
+                      <li><Link onClick={(e: SyntheticEvent) => {
+													e.preventDefault();
+													
+											}}>{c.name}</Link></li>
                     ))}
                   </ul>
                 </div>
               ))}
             </div>
-          </FormControl>
         </article>
       );
     default:

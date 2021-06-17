@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 
 interface GalleryListProps {
   galleries: GroupedGallery;
-  setCurrentGallery: StateUpdater<number | null>;
+  setCurrentGallery: (val: number | null) => void;
 }
 
 export default ({
@@ -59,7 +59,7 @@ export default ({
                   <li onClick={() => setCurrentGallery(gallery.id)}>
                     <Card variant="outlined" className={classes.root}>
                       <CardMedia
-                        image={gallery.acf.photos[0].photo.url}
+                        image={gallery.acf.photos[0].photo.sizes.medium}
                         className={classes.media}
                       />
                       <CardHeader title={decode(gallery.title.rendered)} />

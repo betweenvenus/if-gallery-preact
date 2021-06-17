@@ -1,10 +1,8 @@
 import { Chip } from "@material-ui/core";
-import { WPTerm } from "../../types/Gallery";
+import { WPTerm } from "../../../types/Gallery";
 import { decode } from "he";
 import { h } from "preact";
-import styles from "./style.scss";
-import { StateUpdater } from "preact/hooks";
-import { useEffect } from "react";
+import styles from "../FilterContainer/style.scss";
 
 interface MarketChipProps {
   market: WPTerm<"market">;
