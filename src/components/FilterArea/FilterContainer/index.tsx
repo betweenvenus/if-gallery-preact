@@ -1,6 +1,5 @@
 import {
   AllGalleries,
-  Gallery,
   GroupedGallery,
   WPTerm,
 } from "../../../types/Gallery";
@@ -30,7 +29,6 @@ export default ({
   allClients,
 }: FilterContainerProps) => {
   const [marketsList, setMarketsList] = useState<WPTerm<"market">[]>([]);
-
   const [activeTerms, setActiveTerms] = useState<string[]>([]);
 
 	useEffect(() => console.log(allClients), [allClients])

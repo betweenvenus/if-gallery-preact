@@ -1,19 +1,3 @@
-/**
- * Represents the format of the "terms"
- * field on responses from the API as it's
- * configured currently.
- */
-interface APITermResponse {
-  id: number;
-  name: string;
-  slug: string;
-}
-
-// /**
-//  * Types describing gallery taxonomies and attributes
-//  * (attributes are usually just ACF booleans)
-//  */
-
 export type GalleryTaxonomy = "market" | "client";
 
 export type GalleryAttribute = "featured" | "custom" | "unique";

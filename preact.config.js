@@ -7,7 +7,7 @@ export default {
 				/**
 				 * enable camel case props for css objects 
 				 * (`styles.fooBarBaz` instead of `styles["foo-bar-bar"]`)
-				 * sweet christ why isn't this on by default? there goes 
+				 * christ why isn't this on by default? there goes 
 				 * 30 minutes of my life
 				 */
         cssLoaderOptions.exportLocalsConvention = "camelCase";

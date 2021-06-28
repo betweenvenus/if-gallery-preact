@@ -1,14 +1,11 @@
 import styles from "./style.scss";
 import { h } from "preact";
-import { StateUpdater } from "preact/hooks";
-import { Gallery, GroupedGallery } from "../../types/Gallery";
+import { GroupedGallery } from "../../types/Gallery";
 import {
   Card,
   CardHeader,
   CardMedia,
-  CardContent,
   makeStyles,
-	Divider
 } from "@material-ui/core";
 import { decode } from "he";
 
@@ -37,22 +34,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface GalleryListProps {
-  galleries: GroupedGallery;
-  setCurrentGallery: (val: number | null) => void;
-}
-
-export default ({
-  galleries,
-  setCurrentGallery,
-}: GalleryListProps) => {
-  const GalleryItems = (galleries: GroupedGallery) => {
+export default () => {
+  const GalleryItems = (galleries: Gallery[]) => {
     const classes = useStyles();
 
     return Object.keys(galleries).map((term: any) => {
         return (
-          <section className={styles.gallerySection}>
-            <h1 className={styles.gallerySectionHeading}>{galleries[term][0].terms.market[0].name}</h1>
             <ul>
               {galleries[term].map((gallery) => {
                 return (
@@ -68,7 +55,6 @@ export default ({
                 );
               })}
             </ul>
-          </section>
         );
     });
   };
