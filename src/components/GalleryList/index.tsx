@@ -1,13 +1,18 @@
-import styles from "./style.scss";
+// import { h } from "preact";
+// import {
+//   Card,
+//   CardHeader,
+//   CardMedia,
+//   makeStyles,
+// } from "@material-ui/core";
+// import { decode } from "he";
+// import { Gallery } from "../../types/Gallery";
+
+import { makeStyles } from "@material-ui/core";
 import { h } from "preact";
-import { GroupedGallery } from "../../types/Gallery";
-import {
-  Card,
-  CardHeader,
-  CardMedia,
-  makeStyles,
-} from "@material-ui/core";
-import { decode } from "he";
+import { Gallery } from "../../types/Gallery";
+import { fetchGalleries } from "../../util/api";
+import SingleGallery from "./SingleGallery";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,33 +39,45 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default () => {
-  const GalleryItems = (galleries: Gallery[]) => {
-    const classes = useStyles();
+// export default () => {
+//   const GalleryItems = (galleries: Gallery[]) => {
+//     const classes = useStyles();
 
-    return Object.keys(galleries).map((term: any) => {
-        return (
-            <ul>
-              {galleries[term].map((gallery) => {
-                return (
-                  <li onClick={() => setCurrentGallery(gallery.id)}>
-                    <Card variant="outlined" className={classes.root}>
-                      <CardMedia
-                        image={gallery.acf.photos[0].photo.sizes.medium}
-                        className={classes.media}
-                      />
-                      <CardHeader title={decode(gallery.title.rendered)} />
-                    </Card>
-                  </li>
-                );
-              })}
-            </ul>
-        );
-    });
-  };
-  return (
-    <ul className="gallery-thumbnails">
-      {galleries && GalleryItems(galleries)}
-    </ul>
-  );
-};
+//     return Object.keys(galleries).map((term: any) => {
+//         return (
+//             <ul>
+//               {galleries.map((gallery) => {
+//                 return (
+//                   <li onClick={() => setCurrentGallery(gallery.id)}>
+//                     <Card variant="outlined" className={classes.root}>
+//                       <CardMedia
+//                         image={gallery.acf.photos[0].photo.sizes.medium}
+//                         className={classes.media}
+//                       />
+//                       <CardHeader title={decode(gallery.title.rendered)} />
+//                     </Card>
+//                   </li>
+//                 );
+//               })}
+//             </ul>
+//         );
+//     });
+//   };
+//   return (
+//     <ul className="gallery-thumbnails">
+//       {galleries && GalleryItems(galleries)}
+//     </ul>
+//   );
+// };
+
+export default (galleries: Gallery[]) => {
+	return (
+		<ul>
+			{galleries.map((g) => {
+				return (
+					<li><SingleGallery gallery={g} /></li>
+				)
+			})}
+		</ul>
+	)
+}
