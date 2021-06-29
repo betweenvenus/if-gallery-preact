@@ -71,7 +71,7 @@ export default ({
     markets
       .sort((a, b) => ((a.slug as any) > (b.slug as any) ? 1 : -1))
       .map((market) => (
-        <span onClick={() => toggleMarket(market)}>
+        <span className="market-chip" onClick={() => toggleMarket(market)}>
           <MarketChip market={market} />
         </span>
       ));

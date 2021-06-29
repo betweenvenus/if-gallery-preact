@@ -6,13 +6,22 @@ import FilterContainer from "./FilterContainer";
 import GalleryList from "./GalleryList";
 import ViewGallery from "./ViewGallery";
 import { groupBy } from "lodash";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core";
 
 const getGalleryById = (galleries: Gallery[], id: number) => {
   return galleries.find((g) => g.id === id);
 };
 
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: "#682875",
+    },
+  },
+});
+
 export function App() {
-	const [galleriesArray, setGalleriesArray] = useState<Gallery[]>([]);
+  const [galleriesArray, setGalleriesArray] = useState<Gallery[]>([]);
   const [galleries, setGalleries] = useState<GroupedGallery>({});
   const [galleryItems, setGalleryItems] = useState<GroupedGallery>({});
   const [excludedGalleries, setExcludedGalleries] = useState<Gallery[]>([]);
@@ -20,8 +29,9 @@ export function App() {
   const [clients, setClients] = useState<WPTerm<"client">[]>([]);
   const [currentGallery, setCurrentGallery] = useState<number | null>(null);
   const [filterMode, setFilterMode] = useState<"market" | "client">("market");
-  const [sortMode, setSortMode] =
-    useState<"date" | "alphabetical">("alphabetical");
+  const [sortMode, setSortMode] = useState<"date" | "alphabetical">(
+    "alphabetical"
+  );
 
   useEffect(() => {
     const setData = async () => {
@@ -32,7 +42,7 @@ export function App() {
       ]);
       const [galleryData, marketData, clientData] = data;
       setGalleries(groupBy(galleryData, "terms.market[0].slug"));
-			setGalleriesArray(galleryData);
+      setGalleriesArray(galleryData);
       setGalleryItems(galleries);
       setMarkets(marketData);
       setClients(clientData);
@@ -41,26 +51,27 @@ export function App() {
   }, []);
 
   return (
-    <div>
-      <FilterContainer
-        allMarkets={markets}
-        allGalleries={galleries}
-        setGalleries={setGalleryItems}
-				filterMode={filterMode}
-				setFilterMode={setFilterMode}
-				allClients={clients}
-				
-      />
-      <GalleryList
-        galleries={galleryItems}
-        setCurrentGallery={setCurrentGallery}
-      />
-      {currentGallery && (
-        <ViewGallery
-          gallery={getGalleryById(galleriesArray, currentGallery)}
+    <ThemeProvider theme={theme}>
+      <main>
+        <FilterContainer
+          allMarkets={markets}
+          allGalleries={galleries}
+          setGalleries={setGalleryItems}
+          filterMode={filterMode}
+          setFilterMode={setFilterMode}
+          allClients={clients}
+        />
+        <GalleryList
+          galleries={galleryItems}
           setCurrentGallery={setCurrentGallery}
         />
-      )}
-    </div>
+        {currentGallery && (
+          <ViewGallery
+            gallery={getGalleryById(galleriesArray, currentGallery)}
+            setCurrentGallery={setCurrentGallery}
+          />
+        )}
+      </main>
+    </ThemeProvider>
   );
 }
