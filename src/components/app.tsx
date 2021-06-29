@@ -1,92 +1,47 @@
 import { h } from "preact";
-import { fetchGalleries, fetchAllMarkets, fetchAllClients } from "../util/api";
-import { useEffect, useState, useMemo } from "preact/hooks";
-import { AllGalleries, Gallery, WPTerm } from "../types/Gallery";
-import FilterContainer from "./FilterArea/FilterContainer";
+import { useEffect, useState } from "preact/hooks";
+import { theme, useQueryString, useGalleryData, useTerms } from "../util";
 import GalleryList from "./GalleryList";
-import ViewGallery from "./ViewGallery";
-import { groupBy } from "lodash";
+import { ThemeProvider } from "@material-ui/core";
+import { Gallery, WPTerm } from "../types/Gallery";
+import SingleGallery from "./GalleryList/SingleGallery";
+import FilterArea from "./FilterArea";
+import FilterMenu from "./FilterArea/FilterMenu";
+import MarketChip from "./FilterArea/MarketFilter/MarketChip";
 
-const getGalleryById = (galleries: Gallery[], id: number) => {
-  return galleries.find((g) => g.id === id);
-};
-
-export function App() {
-  const [galleries, setGalleries] = useState<AllGalleries>({
-    original: [],
-    grouped: {},
-    filtered: {},
-    current: null,
-  });
-
-  const setCurrentGallery = (val: number | null) => {
-    setGalleries((prev) => {
-      return { ...prev, current: val };
-    });
-  };
-
-	const [query, setQuery] = useState("");
-	const [terms, setActiveTerms] = useState([]);
-	// const [galleries, setActiveGalleries] = useState([]);
-	const [selectedGallery, setSelectedGallery] = useState("");
-  const [markets, setMarkets] = useState<WPTerm<"market">[]>([]);
-  const [clients, setClients] = useState<WPTerm<"client">[]>([]);
-  const [filterMode, setFilterMode] = useState<"market" | "client">("market");
-  const [sortMode, setSortMode] =
-    useState<"date" | "alphabetical">("alphabetical");
-
-  useEffect(() => {
-    const setData = async () => {
-      const data = await Promise.all([
-        fetchGalleries(),
-        fetchAllMarkets(),
-        fetchAllClients(),
-      ]);
-      const [galleryData, marketData, clientData] = data;
-
-      setGalleries({
-        original: galleryData,
-        grouped: groupBy(galleryData, "terms.market[0].slug"),
-        filtered: {},
-        current: null,
-      });
-
-      setMarkets(marketData);
-      setClients(clientData);
-    };
-    setData();
-  }, []);
-
-
-  return (
-    <div>
-      <FilterContainer
-        allMarkets={markets}
-        allGalleries={galleries.grouped}
-        setGalleries={setGalleries}
-        filterMode={filterMode}
-        setFilterMode={setFilterMode}
-        allClients={clients}
-      />
-      <GalleryList
-        galleries={galleries.filtered}
-      />
-      {galleries.current && (
-        <ViewGallery
-          gallery={getGalleryById(galleries.original, galleries.current)}
-          setCurrentGallery={setCurrentGallery}
-        />
-      )}
-    </div>
-  );
+const renderFilters = (mode: string, terms: any) => {
+	switch(mode) {
+		case 'market':
+			return (terms.markets.map((m: WPTerm<"market">) => <MarketChip market={m} />))
+		case 'client':
+			return (terms.clients.map((c) => <span>{c.name}</span>))
+		default:
+			return "sadfasdfd";
+	}
 }
-
-import { h } from "preact";
-import { useEffect } from "preact/hooks";
-import { useQueryString } from "../util";
-import GalleryList from "./GalleryList";
 
 export const App = () => {
 	const query = useQueryString(location.href);
-	<GalleryList galleries />
+	const initGalleries = useGalleryData();
+	const initTerms = useTerms();
+	const [galleries, setGalleries] = useState<Gallery[]>([])
+	const [terms, setTerms] = useState({});
+	useEffect(() => {
+		setGalleries(initGalleries);
+	}, [initGalleries])
+	useEffect(() => {
+		setTerms(initTerms);
+	}, [initTerms])
+	const [mode, setMode] = useState("");
+	return (
+		<ThemeProvider theme={theme}>
+			<FilterArea>
+				<FilterMenu mode={mode} setMode={setMode} />
+				{renderFilters(mode, terms)}
+			</FilterArea>
+			<GalleryList>
+				{galleries.length > 0 && galleries.map(g => <li><SingleGallery gallery={g} /></li>)}
+			</GalleryList>
+		</ThemeProvider>
+	)
 }

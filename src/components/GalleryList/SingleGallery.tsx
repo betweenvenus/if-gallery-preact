@@ -1,15 +1,18 @@
 import { h } from "preact";
 import { createPortal } from "preact/compat";
 import { useState } from "preact/hooks";
-import { Card, CardHeader, CardMedia, makeStyles } from "@material-ui/core";
+import { Card, CardHeader, CardMedia, Chip, makeStyles } from "@material-ui/core";
 import { decode } from "he";
 import { Gallery } from "../../types/Gallery";
+import { useEffect } from "react";
+import ViewGallery from "../ViewGallery";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 345,
+		width: 350,
     cursor: "pointer",
     transition: "opacity .25s ease-out",
+		margin: "40px"
   },
   media: {
     height: 0,
@@ -30,24 +33,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const showGallery = (show: boolean) =>
-  show && createPortal(<div>hello world</div>, document.body);
+const showGallery = (show: boolean, gallery: Gallery) =>
+  show && createPortal(<ViewGallery gallery={gallery} />, document.body);
 
-export default (gallery: Gallery) => {
+export default ({gallery}: {gallery: Gallery}) => {
   const classes = useStyles();
   // const [currentGallery, setCurrentGallery]
   const [active, setActive] = useState(false);
   return (
   // <article onClick={() => setCurrentGallery(gallery.id)}>
-    <article onClick={() => setActive(true)}>
-			{/* @ts-ignore */}
-      <Card variant="outlined" className={classes.root}>
-			{/* @ts-ignore */}
-        <CardMedia image={gallery.acf.photos[0].photo.sizes.medium} />
-			{/* @ts-ignore */}
+    <article className={classes.root} onClick={() => setActive(true)}>
+      <Card variant="outlined">
+        <CardMedia className={classes.media} image={gallery.acf.photos[0].photo.sizes.large} />
+				<span>{gallery.terms.client[0].name}</span>
         <CardHeader title={decode(gallery.title.rendered)} />
+				{gallery.terms.market.map((m) => <Chip label={m.name} color="primary" size="small" />)}
       </Card>
-      {showGallery(active)}
+      {showGallery(active, gallery)}
     </article>
   );
 };

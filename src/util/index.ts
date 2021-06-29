@@ -1,5 +1,6 @@
-import { useState, useEffect } from "preact/hooks";
-import { GroupedGallery } from "../types/Gallery";
+import { useState, useEffect, StateUpdater } from "preact/hooks";
+import { Gallery, GroupedGallery, WPTerm } from "../types/Gallery";
+import { createMuiTheme } from "@material-ui/core";
 
 export const filterGalleriesByTerms = (
   galleries: GroupedGallery,
@@ -13,10 +14,6 @@ export const filterGalleriesByTerms = (
 	}, {} as any);
 };
 
-export const useGalleryData = () => {
-	
-}
-
 export const useQueryString = (url: string) => {
 	const encodedURL = new URL(url);
 	const [query, setQuery] = useState(encodedURL.search);
@@ -27,3 +24,97 @@ export const useSelectGallery = (id: number) => {
 	const [selectedGallery, setSelectedGallery] = useState(0);
 
 }
+
+/**
+ * Fetches gallery data from API and returns
+ * useState variable and setter
+ */
+export const useGalleryData = (): Gallery[] => {
+	const baseURL =
+			"https://innovativefitness.ahn2k5uj-liquidwebsites.com/wp-json/wp/v2";
+	const [galleries, setGalleries] = useState<Gallery[]>([]);
+	useEffect(() => {
+		const initializeGalleries = async () => {
+			try {
+        const res = await fetch(
+            `${baseURL}/galleries?${new URLSearchParams({
+                _fields: "title,acf.photos,terms,id",
+                per_page: "100",
+            }).toString()}`
+        );
+        if (!res.ok) throw new Error("fetchGallery response error");
+        const allGalleries = await res.json();
+				setGalleries(allGalleries);
+    } catch (e) {
+        console.error(e);
+    }
+		};
+		initializeGalleries();
+	}, [])
+	return galleries;
+}
+
+type Market = WPTerm<"market">;
+type Client = WPTerm<"client">;
+
+export const useTerms = () => {
+	const termSlugs = ["market", "client"];
+	const baseURL =
+			"https://innovativefitness.ahn2k5uj-liquidwebsites.com/wp-json/wp/v2";
+	const fetchAllMarkets = async (): Promise<Market[]> => {
+    try {
+        const res = await fetch(
+            `${baseURL}/market?${new URLSearchParams({
+                _fields: "id,name,slug,count",
+								per_page: "100"
+            }).toString()}`
+        );
+        if (!res.ok) throw new Error("failed to load market terms");
+        const json: Market[]  = await res.json();
+        return json.filter(m => m.count > 0);
+    } catch (e) {
+      return e;
+    }
+};
+
+	const fetchAllClients = async (): Promise<Client[]> => {
+    try {
+        const res = await fetch(
+            `${baseURL}/client?${new URLSearchParams({
+                _fields: "id,name,slug,count",
+								per_page: "100"
+            }).toString()}`
+        );
+        if (!res.ok) throw new Error("failed to load client terms");
+        const json: Client[]  = await res.json();
+        return json.filter(m => m.count > 0);
+    } catch (e) {
+      return e;
+    }
+	};
+
+	const [terms, setTerms] = useState({});
+
+	const initializeTerms = async () => {
+		const data = await Promise.all([fetchAllMarkets(), fetchAllClients()]);
+		const [markets, clients] = data;
+		setTerms({markets, clients});
+	}
+
+	useEffect(() => {
+		initializeTerms();
+	}, []);
+
+	return terms;
+}
+
+/**
+ * Custom theme for Material UI
+ */
+export const theme = createMuiTheme({
+	palette: {
+		primary: {
+			main: "#682875"
+		}
+	}
+});

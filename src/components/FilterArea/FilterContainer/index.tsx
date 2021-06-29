@@ -8,7 +8,7 @@ import { h } from "preact";
 import { StateUpdater, useEffect, useState } from "preact/hooks";
 import styles from "./style.scss";
 import MarketChip from "../MarketFilter/MarketChip";
-import { filterGalleriesByTerms } from "../../../util/util";
+import { filterGalleriesByTerms } from "../../../util";
 import { groupBy } from "lodash";
 import { SyntheticEvent } from "react";
 

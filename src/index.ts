@@ -4,5 +4,3 @@ import { render, h } from "preact";
 
 if (typeof window !== "undefined")
   render(h(App, ""), document.querySelector("#ifs-gallery") as HTMLElement);
-
-// export default App;

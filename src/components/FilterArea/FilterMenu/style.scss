@@ -1,0 +1,52 @@
+.filter-container {
+	padding: 40px 20px;
+	background-color: #ededed;
+}
+
+.filter-container .market-chips-container {
+	// max-width: 1000px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content:  flex-start;
+}
+
+.filter-container .market-chip {
+	margin: 10px 10px;
+	padding: 30px 30px;
+	border-radius: 50px;
+	font-size: 14px;
+	border: none;
+}
+
+.market-chip .MuiChip-label {
+	padding: 10px 20px;
+}
+
+.form-control {
+	min-width: 200px !important;
+	margin-bottom: 20px !important;
+	margin-left: 20px !important;
+	max-width: 300px !important;
+}
+
+.filter-select-item {
+	background-color: greenyellow;
+	padding: 20px;
+}
+
+.client-filters {
+	display: flex;
+	flex-flow: column;
+	flex-wrap: wrap;
+	max-height: 700px;
+}
+
+.client-filter-section {
+	padding: 0px 20px;
+}
+
+.client-filter-section ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
