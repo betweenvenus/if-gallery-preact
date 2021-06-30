@@ -8,7 +8,6 @@ import { h } from "preact";
 import { StateUpdater, useEffect, useState } from "preact/hooks";
 import styles from "./style.scss";
 import MarketChip from "../MarketFilter/MarketChip";
-import { filterGalleriesByTerms } from "../../../util";
 import { groupBy } from "lodash";
 import { SyntheticEvent } from "react";
 
@@ -38,17 +37,6 @@ export default ({
       marketsList.filter(({ active }) => active).map(({ slug }) => slug)
     );
   }, [marketsList]);
-
-  useEffect(() => {
-    setGalleries((prev: AllGalleries) => {
-      return {
-        original: [...prev.original],
-        grouped: { ...prev.grouped },
-        filtered: filterGalleriesByTerms(prev.grouped, activeTerms),
-				current: prev.current
-      };
-    });
-  }, [activeTerms]);
 
   const setAllMarketsActive = (market: WPTerm<"market">): WPTerm<"market"> => {
     return { ...market, active: true };

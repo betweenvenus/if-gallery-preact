@@ -13,9 +13,8 @@ import { decode } from "he";
 import { Gallery } from "../../types/Gallery";
 import ViewGallery from "../ViewGallery";
 import styles from "./style.scss";
-import { useEffect } from "preact/hooks";
-import StarIcon from '@material-ui/icons/Star';
-import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
+import StarIcon from "@material-ui/icons/Star";
+import EmojiEventsIcon from "@material-ui/icons/EmojiEvents";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,46 +54,65 @@ export default ({
   gallery,
   selectedGallery,
   setSelectedGallery,
+  attribute,
 }: {
   gallery: Gallery;
   selectedGallery: number;
   setSelectedGallery: StateUpdater<number>;
+  attribute: string;
 }) => {
   //@ts-ignore
   const classes = useStyles();
-  // const [currentGallery, setCurrentGallery]
-  const [active, setActive] = useState(false);
-  // useEffect(() => {
-  // 	// console.log(selectedGallery === gallery.id);
-  // 	console.log(gallery.id);
-  // }, [selectedGallery])
-	useEffect(() => {
-		console.log(gallery)
-	}, [])
-  return (
-    // <article onClick={() => setCurrentGallery(gallery.id)}>
-    <article
-      className={classes.root}
-      onClick={() => setSelectedGallery(gallery.id)}
-    >
-      <Card className={styles.galleryCard}>
-        <CardMedia
-          className={classes.media}
-          image={gallery.acf.photos[0].photo.sizes.large}
-        />
-        <CardContent>
-          <span className={styles.clientName}>
-            {gallery.terms.client[0].name}
-          </span>
-          <CardHeader className={styles.cardHeader} title={decode(gallery.title.rendered)} />
-          {gallery.terms.market.map((m) => (
-            <Chip label={decode(m.name)} color="primary"  />
-          ))}
-					{gallery.acf.attributes?.custom_item ?  <div className={styles.customItem}><StarIcon /> This item is custom made!</div>: ""}
-					{gallery.acf.attributes?.custom_item ?  <div className={styles.customItem}><EmojiEventsIcon /> See unique and unusual products here!</div>: ""}
-        </CardContent>
-      </Card>
-      {showGallery(selectedGallery === gallery.id, gallery, setSelectedGallery)}
-    </article>
-  );
+  if (
+    attribute === "all" ||
+    (typeof gallery.acf.attributes !== "undefined" &&
+      gallery.acf.attributes[attribute])
+  ) {
+    return (
+      <article
+        className={classes.root}
+        onClick={() => setSelectedGallery(gallery.id)}
+      >
+        <Card className={styles.galleryCard}>
+          <CardMedia
+            className={classes.media}
+            image={gallery.acf.photos[0].photo.sizes.large}
+          />
+          <CardContent>
+            <span className={styles.clientName}>
+              {gallery.terms.client[0].name}
+            </span>
+            <CardHeader
+              className={styles.cardHeader}
+              title={decode(gallery.title.rendered)}
+            />
+            {gallery.terms.market.map((m) => (
+              <Chip label={decode(m.name)} color="primary" />
+            ))}
+            {gallery.acf.attributes && gallery.acf.attributes.custom_item ? (
+              <div className={styles.customItem}>
+                <StarIcon /> This item is custom made!
+              </div>
+            ) : (
+              ""
+            )}
+            {gallery.acf.attributes && gallery.acf.attributes.unique_item ? (
+              <div className={styles.customItem}>
+                <EmojiEventsIcon /> See unique and unusual products here!
+              </div>
+            ) : (
+              ""
+            )}
+          </CardContent>
+        </Card>
+        {showGallery(
+          selectedGallery === gallery.id,
+          gallery,
+          setSelectedGallery
+        )}
+      </article>
+    );
+  } else { 
+		return <span></span>
+	}
 };

@@ -29,7 +29,6 @@ const toggleMarket = (
   slug: string
 ) => {
   const copy = { ...terms };
-  // console.log(copy.markets.find((market) => market.slug === slug));
   const index = copy.markets.findIndex((market) => {
     return market.slug === slug;
   });
@@ -39,7 +38,7 @@ const toggleMarket = (
 
 const renderFilters = (
   mode: string,
-  terms: { markets: WPTerm<"market">[]; clients: WPTerm<"client">[] },
+  terms: any,
   setTerms: StateUpdater<any>
 ) => {
   switch (mode) {
@@ -50,9 +49,27 @@ const renderFilters = (
         </li>
       ));
     case "client":
-      return terms.clients.map((c: WPTerm<"client">) => (
-        <a className="client-link" href={"#" + c.slug}>{decode(c.name)}</a>
-      ));
+      // return terms.clients.map((c: WPTerm<"client">) => (
+      //   <a className="client-link" href={"#" + c.slug}>{decode(c.name)}</a>
+      // ));
+			const clients = groupBy(terms.clients, "slug[0]");
+			return (
+				<div className="clients-alphabetical">
+					{Object.keys(clients).map((letter) => {
+						return (
+							<div class="client-links">
+								<span className="client-link-heading">{letter.toUpperCase()}</span>
+								<ul>
+									{clients[letter].map((client) => {
+										return (<li><a className="client-link" href={"#" + client.slug}>{decode(client.name)}</a></li>)
+									})}
+								</ul>
+							</div>
+						)
+								})
+							}
+				</div>
+			)
     default:
       return "";
   }
@@ -60,7 +77,7 @@ const renderFilters = (
 
 export const App = () => {
   const [galleries, setGalleries] = useState<Gallery[]>([]);
-  const [terms, setTerms] = useState({});
+  const [terms, setTerms] = useState<any>({});
   const [mode, setMode] = useState("default");
   const [selectedGallery, setSelectedGallery] = useState(0);
 
@@ -90,7 +107,7 @@ export const App = () => {
     }
   };
 
-  const [attributes, setAttributes] = useState("all");
+  const [attribute, setAttribute] = useState("all");
 
   useEffect(() => {
     if (query.has("selected")) {
@@ -130,7 +147,6 @@ export const App = () => {
                 <FilterMenu
                   mode={mode}
                   setMode={setMode}
-                  setGalleries={setGalleries}
                 />
                 <div>
                   <ul className="filter-selector-items">
@@ -144,9 +160,9 @@ export const App = () => {
                 <RadioGroup
                   aria-label="gallery-attributes"
                   name="attributes"
-                  value={attributes}
+                  value={attribute}
                   row={true}
-                  onChange={(e) => setAttributes(e.target.value)}
+                  onChange={(e) => setAttribute(e.target.value)}
                 >
                   <FormControlLabel
                     value="all"
@@ -154,12 +170,12 @@ export const App = () => {
                     label="All galleries"
                   />
                   <FormControlLabel
-                    value="custom"
+                    value="custom_item"
                     control={<Radio color="primary" />}
                     label="Custom designs"
                   />
                   <FormControlLabel
-                    value="unique"
+                    value="unique_item"
                     control={<Radio color="primary" />}
                     label="Unique products"
                   />
@@ -184,16 +200,17 @@ export const App = () => {
                       gallery={g}
                       selectedGallery={selectedGallery}
                       setSelectedGallery={setSelectedGallery}
+											attribute={attribute}
                     />
                   </li>
                 );
               }
             })}
+        </GalleryList>
           {mode === "market" &&
             galleries.length > 0 &&
             Object.keys(terms).length > 0 &&
             Object.keys(galleriesByMarket).map((term) => {
-              console.log(galleriesByMarket[term]);
               if (
                 terms.markets.find(
                   (market) =>
@@ -214,6 +231,7 @@ export const App = () => {
                               gallery={g}
                               selectedGallery={selectedGallery}
                               setSelectedGallery={setSelectedGallery}
+															attribute={attribute}
                             />
                           </li>
                         );
@@ -238,6 +256,7 @@ export const App = () => {
                             gallery={g}
                             selectedGallery={selectedGallery}
                             setSelectedGallery={setSelectedGallery}
+														attribute={attribute}
                           />
                         </li>
                       );
@@ -246,7 +265,6 @@ export const App = () => {
                 </section>
               );
             })}
-        </GalleryList>
       </QueryContext.Provider>
     </ThemeProvider>
   );

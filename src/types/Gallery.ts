@@ -62,6 +62,7 @@ export interface Gallery {
 	slug: string;
   id: number;
   acf: {
+		attributes: {custom_item: boolean, unique_item: boolean};
     photos: GalleryPhoto[];
   };
   terms: {
