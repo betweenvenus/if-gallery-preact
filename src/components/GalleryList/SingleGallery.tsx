@@ -15,7 +15,7 @@ import ViewGallery from "../ViewGallery";
 import styles from "./style.scss";
 import { useEffect } from "preact/hooks";
 import StarIcon from '@material-ui/icons/Star';
-import PanTool from '@material-ui/icons/PanTool';
+import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -91,6 +91,7 @@ export default ({
             <Chip label={decode(m.name)} color="primary"  />
           ))}
 					{gallery.acf.attributes?.custom_item ?  <div className={styles.customItem}><StarIcon /> This item is custom made!</div>: ""}
+					{gallery.acf.attributes?.custom_item ?  <div className={styles.customItem}><EmojiEventsIcon /> See unique and unusual products here!</div>: ""}
         </CardContent>
       </Card>
       {showGallery(selectedGallery === gallery.id, gallery, setSelectedGallery)}

@@ -21,7 +21,8 @@ import SingleGallery from "./GalleryList/SingleGallery";
 import FilterArea from "./FilterArea";
 import FilterMenu from "./FilterArea/FilterMenu";
 import MarketChip from "./FilterArea/MarketFilter/MarketChip";
-import { produce } from "immer";
+import { groupBy } from "lodash";
+import { decode } from "he";
 
 const toggleMarket = (
   terms: { markets: WPTerm<"market">[]; clients: WPTerm<"client">[] },
@@ -49,7 +50,9 @@ const renderFilters = (
         </li>
       ));
     case "client":
-      return terms.clients.map((c: WPTerm<"client">) => <span>{c.name}</span>);
+      return terms.clients.map((c: WPTerm<"client">) => (
+        <a className="client-link" href={"#" + c.slug}>{decode(c.name)}</a>
+      ));
     default:
       return "";
   }
@@ -70,19 +73,16 @@ export const App = () => {
 
   useEffect(() => {
     setTerms(initTerms);
-    console.log(initTerms);
   }, [initTerms]);
 
   const [query, setQuery] = useState(
     new URLSearchParams(new URL(location.href).search)
   );
   // useEffect(() => {
-  // 	console.log(query.toString());
-  // 	const url = new URL(location.href);
-  // 	url.searchParams = query;
-  // 	history.pushState({}, "", url);
-  // }, [query])
-
+  //   const url = new URL(location.href);
+  //   url.searchParams.set();
+  //   history.pushState({}, "", url);
+  // }, [query]);
   const getGallerySlugByID = (id: number) => {
     const gallery = galleries.find((g) => g.id === id);
     if (gallery) {
@@ -101,6 +101,22 @@ export const App = () => {
     }
   }, [query]);
 
+  const [galleriesByMarket, setGalleriesByMarket] = useState({});
+
+  useEffect(() => {
+    if (mode === "market") {
+      setGalleriesByMarket(groupBy(galleries, "terms.market[0].slug"));
+    }
+  }, [mode]);
+
+  const [galleriesByClient, setGalleriesByClient] = useState({});
+
+  useEffect(() => {
+    if (mode === "client") {
+      setGalleriesByClient(groupBy(galleries, "terms.client[0].slug"));
+    }
+  }, [mode]);
+
   return (
     <ThemeProvider theme={theme}>
       <QueryContext.Provider value={{ query, setQuery }}>
@@ -111,7 +127,11 @@ export const App = () => {
           <AccordionDetails>
             <FilterArea>
               <div className="filter-selector-wrapper">
-                <FilterMenu mode={mode} setMode={setMode} setGalleries={setGalleries} />
+                <FilterMenu
+                  mode={mode}
+                  setMode={setMode}
+                  setGalleries={setGalleries}
+                />
                 <div>
                   <ul className="filter-selector-items">
                     {Object.keys(terms).length > 0 &&
@@ -149,7 +169,8 @@ export const App = () => {
           </AccordionDetails>
         </Accordion>
         <GalleryList>
-          {galleries.length > 0 &&
+          {mode === "default" &&
+            galleries.length > 0 &&
             Object.keys(terms).length > 0 &&
             galleries.map((g) => {
               if (
@@ -167,6 +188,63 @@ export const App = () => {
                   </li>
                 );
               }
+            })}
+          {mode === "market" &&
+            galleries.length > 0 &&
+            Object.keys(terms).length > 0 &&
+            Object.keys(galleriesByMarket).map((term) => {
+              console.log(galleriesByMarket[term]);
+              if (
+                terms.markets.find(
+                  (market) =>
+                    market.slug ===
+                    galleriesByMarket[term][0].terms.market[0].slug
+                ).active
+              )
+                return (
+                  <section>
+                    <h1 className="group-heading">
+                      {decode(galleriesByMarket[term][0].terms.market[0].name)}
+                    </h1>
+                    <GalleryList>
+                      {galleriesByMarket[term].map((g) => {
+                        return (
+                          <li>
+                            <SingleGallery
+                              gallery={g}
+                              selectedGallery={selectedGallery}
+                              setSelectedGallery={setSelectedGallery}
+                            />
+                          </li>
+                        );
+                      })}
+                    </GalleryList>
+                  </section>
+                );
+            })}
+          {mode === "client" &&
+            Object.keys(terms).length > 0 &&
+            Object.keys(galleriesByClient).map((term) => {
+              return (
+                <section>
+                  <h1 className="group-heading" id={galleriesByClient[term][0].terms.client[0].slug}>
+                    {decode(galleriesByClient[term][0].terms.client[0].name)}
+                  </h1>
+                  <GalleryList>
+                    {galleriesByClient[term].map((g) => {
+                      return (
+                        <li>
+                          <SingleGallery
+                            gallery={g}
+                            selectedGallery={selectedGallery}
+                            setSelectedGallery={setSelectedGallery}
+                          />
+                        </li>
+                      );
+                    })}
+                  </GalleryList>
+                </section>
+              );
             })}
         </GalleryList>
       </QueryContext.Provider>

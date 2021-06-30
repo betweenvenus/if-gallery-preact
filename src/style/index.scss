@@ -131,3 +131,17 @@ button:focus {
 	flex-wrap: wrap;
 	padding-left: 0;
 }
+
+.group-heading {
+	margin-left: 70px;
+	font-size: 48px;
+	font-weight: 200;
+}
+
+.client-link {
+	display: inline-block;
+	margin: 5px 5px 5px 20px;
+	font-weight: bold;
+	font-size: 1.1rem;
+	color: $purple;
+}

@@ -45,7 +45,7 @@ export const useGalleryData = (): Gallery[] => {
         );
         if (!res.ok) throw new Error("fetchGallery response error");
         const allGalleries = await res.json();
-				setGalleries(allGalleries.sort((a, b) => (b.title.rendered - a.title.rendered) ? -1 : 1));
+				setGalleries(allGalleries);
     } catch (e) {
         console.error(e);
     }
