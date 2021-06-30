@@ -11,7 +11,7 @@
 import { makeStyles } from "@material-ui/core";
 import { ComponentChildren, h } from "preact";
 import { Gallery } from "../../types/Gallery";
-import { fetchGalleries } from "../../util/api";
+// import { fetchGalleries } from "../../util/api";
 import SingleGallery from "./SingleGallery";
 
 const useStyles = makeStyles((theme) => ({

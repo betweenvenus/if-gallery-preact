@@ -1,18 +1,19 @@
+import { createContext } from "preact";
 import { useState, useEffect, StateUpdater } from "preact/hooks";
 import { Gallery, GroupedGallery, WPTerm } from "../types/Gallery";
 import { createMuiTheme } from "@material-ui/core";
 
-export const filterGalleriesByTerms = (
-  galleries: GroupedGallery,
-  terms: string[]
-): GroupedGallery | {} => {
-  return Object.keys(galleries).reduce((obj, slug) => {
-		if (terms.includes(slug)) {
-			obj[slug] = galleries[slug];
-		}
-		return obj;
-	}, {} as any);
-};
+// export const filterGalleriesByTerms = (
+//   galleries: GroupedGallery,
+//   terms: string[]
+// ): GroupedGallery | {} => {
+//   return Object.keys(galleries).reduce((obj, slug) => {
+// 		if (terms.includes(slug)) {
+// 			obj[slug] = galleries[slug];
+// 		}
+// 		return obj;
+// 	}, {} as any);
+// };
 
 export const useQueryString = (url: string) => {
 	const encodedURL = new URL(url);
@@ -38,13 +39,13 @@ export const useGalleryData = (): Gallery[] => {
 			try {
         const res = await fetch(
             `${baseURL}/galleries?${new URLSearchParams({
-                _fields: "title,acf.photos,terms,id",
+                _fields: "title,slug,acf.photos,acf.attributes,terms,id",
                 per_page: "100",
             }).toString()}`
         );
         if (!res.ok) throw new Error("fetchGallery response error");
         const allGalleries = await res.json();
-				setGalleries(allGalleries);
+				setGalleries(allGalleries.sort((a, b) => (b.title.rendered - a.title.rendered) ? -1 : 1));
     } catch (e) {
         console.error(e);
     }
@@ -97,8 +98,16 @@ export const useTerms = () => {
 
 	const initializeTerms = async () => {
 		const data = await Promise.all([fetchAllMarkets(), fetchAllClients()]);
-		const [markets, clients] = data;
-		setTerms({markets, clients});
+		const [markets, clients] = await data;
+		// console.log(markets);
+		const activeMarkets = markets.map((m) => {
+			return {
+				...m,
+				active: true
+			}
+		});
+		// console.log(activeMarkets);
+		setTerms({markets: activeMarkets, clients});
 	}
 
 	useEffect(() => {
@@ -107,6 +116,11 @@ export const useTerms = () => {
 
 	return terms;
 }
+
+export const QueryContext = createContext({
+	query: new URLSearchParams(),
+	setQuery: () => {}
+} as {query: URLSearchParams, setQuery: StateUpdater<URLSearchParams>});
 
 /**
  * Custom theme for Material UI

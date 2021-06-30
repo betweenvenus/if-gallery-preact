@@ -106,3 +106,28 @@ button:focus {
 .image-gallery-thumbnail:hover {
   border-color: $purple;
 }
+
+.filter-container {
+	width: 100%;
+}
+
+.filter-selector.filter-accordion {
+	background-color: #f2f2f2;
+}
+
+.filter-items-container {
+	display: flex;
+	flex-flow: column;
+}
+
+.filter-selector-wrapper {
+	max-width: 1000px;
+}
+
+.filter-selector-items {
+	display: flex;
+	justify-content: space-between;
+	list-style-type: none;
+	flex-wrap: wrap;
+	padding-left: 0;
+}

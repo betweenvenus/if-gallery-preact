@@ -4,7 +4,7 @@ import ImageGallery from "react-image-gallery";
 import { Backdrop } from "@material-ui/core";
 import { Gallery } from "../../types/Gallery";
 import { CircularProgress } from "@material-ui/core";
-import { useState } from "preact/hooks";
+import { StateUpdater, useState } from "preact/hooks";
 
 const convertToImageGalleryFormat = (
   gallery: Gallery
@@ -19,16 +19,16 @@ const convertToImageGalleryFormat = (
 
 export default ({
   gallery,
-  setCurrentGallery,
+  setSelectedGallery,
 }: {
   gallery: Gallery | undefined;
-  setCurrentGallery: (val: number | null) => void;
+  setSelectedGallery: StateUpdater<number>;
 }) => {
   const [open, setOpen] = useState(true);
   const toggleBackdrop = (e: React.MouseEvent) => {
     e.stopPropagation();
     setOpen(!open);
-    setCurrentGallery(null);
+    setSelectedGallery(0);
   };
   if (gallery) {
     return (
@@ -39,7 +39,7 @@ export default ({
         onKeyDown={(e) => {
           if (e.key === "Escape") {
             setOpen(!open);
-            setCurrentGallery(null);
+            setSelectedGallery(0);
           }
         }}
       >

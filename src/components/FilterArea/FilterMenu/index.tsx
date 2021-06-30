@@ -6,14 +6,17 @@ import { StateUpdater } from "preact/hooks";
 export default ({ mode, setMode }: {mode: string, setMode: StateUpdater<string>}) => {
 	return (
 		<FormControl className={styles.formControl}>
-			<InputLabel id="filter-selector">Choose a filter</InputLabel>
+			<InputLabel id="filter-selector">Group galleries by:</InputLabel>
 			<Select
 				labelId="filter-selector"
 				value={mode}
 				onChange={(e) =>
-					setMode(e.target.value as "market" | "client")
+					setMode(e.target.value as "default" | "market" | "client")
 				}
 			>
+				<MenuItem value={"default"} className={styles.filterSelectItem}>
+					Default
+				</MenuItem>
 				<MenuItem value={"market"} className={styles.filterSelectItem}>
 					Markets
 				</MenuItem>

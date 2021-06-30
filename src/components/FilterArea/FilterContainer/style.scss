@@ -1,5 +1,4 @@
 .filter-container {
-	padding: 40px 20px;
 	background-color: #ededed;
 }
 
@@ -17,6 +16,10 @@
 	font-size: 14px;
 	// background-color: #682875;
 	border: none;
+}
+
+.market-chip {
+	margin: 10px !important;
 }
 
 .market-chip .MuiChip-label {
