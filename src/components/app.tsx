@@ -44,14 +44,11 @@ const renderFilters = (
   switch (mode) {
     case "market":
       return terms.markets.map((m: WPTerm<"market">) => (
-        <li onClick={() => setTerms(toggleMarket(terms, m.slug))}>
+        <a href={"#" + m.slug}>
           <MarketChip market={m} />
-        </li>
+        </a>
       ));
     case "client":
-      // return terms.clients.map((c: WPTerm<"client">) => (
-      //   <a className="client-link" href={"#" + c.slug}>{decode(c.name)}</a>
-      // ));
 			const clients = groupBy(terms.clients, "slug[0]");
 			return (
 				<div className="clients-alphabetical">
@@ -80,7 +77,6 @@ export const App = () => {
   const [terms, setTerms] = useState<any>({});
   const [mode, setMode] = useState("default");
   const [selectedGallery, setSelectedGallery] = useState(0);
-
   const initGalleries = useGalleryData();
   const initTerms = useTerms();
 
@@ -100,12 +96,6 @@ export const App = () => {
   //   url.searchParams.set();
   //   history.pushState({}, "", url);
   // }, [query]);
-  const getGallerySlugByID = (id: number) => {
-    const gallery = galleries.find((g) => g.id === id);
-    if (gallery) {
-      return gallery.slug;
-    }
-  };
 
   const [attribute, setAttribute] = useState("all");
 
@@ -211,16 +201,23 @@ export const App = () => {
             galleries.length > 0 &&
             Object.keys(terms).length > 0 &&
             Object.keys(galleriesByMarket).map((term) => {
-              if (
-                terms.markets.find(
-                  (market) =>
-                    market.slug ===
-                    galleriesByMarket[term][0].terms.market[0].slug
-                ).active
-              )
+							/**
+							 * Below: only returns the market section if
+							 * the market is currently set to active.
+							 * Use this if client wants to filter by markets.
+							 */
+              // if (
+              //   terms.markets.find(
+              //     (market) =>
+              //       market.slug ===
+              //       galleriesByMarket[term][0].terms.market[0].slug
+              //   ).active
+              // )
                 return (
                   <section>
-                    <h1 className="group-heading">
+										{/* if you're bored and looking for something to refactor, please god
+										let this nonsense be it */}
+                    <h1 className="group-heading" id={galleriesByMarket[term][0].terms.market[0].slug}>
                       {decode(galleriesByMarket[term][0].terms.market[0].name)}
                     </h1>
                     <GalleryList>
@@ -242,7 +239,7 @@ export const App = () => {
             })}
           {mode === "client" &&
             Object.keys(terms).length > 0 &&
-            Object.keys(galleriesByClient).map((term) => {
+            Object.keys(galleriesByClient).sort().map((term) => {
               return (
                 <section>
                   <h1 className="group-heading" id={galleriesByClient[term][0].terms.client[0].slug}>
