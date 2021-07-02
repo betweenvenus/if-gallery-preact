@@ -174,3 +174,12 @@ button:focus {
 	list-style-type: none;
 	padding-left: 0;
 }
+
+.filters-right {
+	display: flex;
+	flex-flow: column;
+}
+
+.default-sort {
+	margin-bottom: 20px;
+}

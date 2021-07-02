@@ -59,6 +59,7 @@ export interface Gallery {
   title: {
     rendered: string;
   };
+	date: string;
 	slug: string;
   id: number;
   acf: {

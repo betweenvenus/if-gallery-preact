@@ -21,11 +21,6 @@ export const useQueryString = (url: string) => {
 	return query;
 }
 
-export const useSelectGallery = (id: number) => {
-	const [selectedGallery, setSelectedGallery] = useState(0);
-
-}
-
 /**
  * Fetches gallery data from API and returns
  * useState variable and setter
@@ -39,7 +34,7 @@ export const useGalleryData = (): Gallery[] => {
 			try {
         const res = await fetch(
             `${baseURL}/galleries?${new URLSearchParams({
-                _fields: "title,slug,acf.photos,acf.attributes,terms,id",
+                _fields: "title,date,slug,acf.photos,acf.attributes,terms,id",
                 per_page: "100",
             }).toString()}`
         );
