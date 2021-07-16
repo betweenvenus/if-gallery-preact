@@ -47,7 +47,7 @@ export const useGalleryData = (): Gallery[] => {
 		};
 		initializeGalleries();
 	}, [])
-	return galleries;
+	return galleries.sort((a, b) => (a.slug.toUpperCase() > b.slug.toUpperCase()) ? 1 : -1);
 }
 
 type Market = WPTerm<"market">;

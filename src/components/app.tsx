@@ -1,5 +1,5 @@
 import { h } from "preact";
-import { StateUpdater, useEffect, useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import { theme, useGalleryData, useTerms, QueryContext } from "../util";
 import GalleryList from "./GalleryList";
 import {
@@ -24,6 +24,11 @@ import MarketChip from "./FilterArea/MarketFilter/MarketChip";
 import { groupBy } from "lodash";
 import { decode } from "he";
 
+/*
+
+Helper function for adding or removing a market
+from the list of active markets, currently unused.
+
 const toggleMarket = (
   terms: { markets: WPTerm<"market">[]; clients: WPTerm<"client">[] },
   slug: string
@@ -36,10 +41,11 @@ const toggleMarket = (
   return copy;
 };
 
+*/
+
 const renderFilters = (
   mode: string,
-  terms: any,
-  setTerms: StateUpdater<any>
+  terms: any
 ) => {
   switch (mode) {
     case "market":
@@ -170,7 +176,7 @@ export const App = () => {
                 <div>
                   <ul className="filter-selector-items">
                     {Object.keys(terms).length > 0 &&
-                      renderFilters(mode, terms, setTerms)}
+                      renderFilters(mode, terms)}
                   </ul>
                 </div>
               </div>
@@ -255,7 +261,7 @@ export const App = () => {
         {mode === "market" &&
           galleries.length > 0 &&
           Object.keys(terms).length > 0 &&
-          Object.keys(galleriesByMarket).map((term) => {
+          Object.keys(galleriesByMarket).sort().map((term) => {
             /**
              * Below: only returns the market section if
              * the market is currently set to active.
