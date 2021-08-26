@@ -309,9 +309,9 @@ export const App = () => {
                 <section>
                   <h1
                     className="group-heading"
-                    id={galleriesByClient[term][0].terms.client[0].slug}
+                    id={galleriesByClient[term][0].terms.client[0] && galleriesByClient[term][0].terms.client[0].slug}
                   >
-                    {decode(galleriesByClient[term][0].terms.client[0].name)}
+                    {galleriesByClient[term][0].terms.client[0] && decode(galleriesByClient[term][0].terms.client[0].name)}
                   </h1>
                   <GalleryList>
                     {galleriesByClient[term].map((g) => {
