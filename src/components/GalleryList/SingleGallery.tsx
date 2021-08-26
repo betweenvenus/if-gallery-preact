@@ -80,7 +80,7 @@ export default ({
           />
           <CardContent>
             <span className={styles.clientName}>
-              { gallery.terms.client[0] && gallery.terms.client[0].name}
+              {gallery.terms.client.length > 0 && gallery.terms.client[0].name}
             </span>
             <CardHeader
               className={styles.cardHeader}
