@@ -91,14 +91,14 @@ export default ({
             ))}
             {gallery.acf.attributes && gallery.acf.attributes.custom_item ? (
               <div className={styles.customItem}>
-                <StarIcon /> This item is custom made!
+                <StarIcon /> Custom product
               </div>
             ) : (
               ""
             )}
             {gallery.acf.attributes && gallery.acf.attributes.unique_item ? (
               <div className={styles.customItem}>
-                <EmojiEventsIcon /> See unique and unusual products here!
+                <EmojiEventsIcon /> Unique item
               </div>
             ) : (
               ""

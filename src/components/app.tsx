@@ -246,7 +246,6 @@ export const App = () => {
               {
                 return (
                   <li>
-										{console.log(galleries)}
                     <SingleGallery
                       gallery={g}
                       selectedGallery={selectedGallery}

@@ -27,7 +27,7 @@ export const useQueryString = (url: string) => {
  */
 export const useGalleryData = (): Gallery[] => {
 	const baseURL =
-			"https://innovativefitness.ahn2k5uj-liquidwebsites.com/wp-json/wp/v2";
+			"https://innovativefit.com/wp-json/wp/v2";
 	const [galleries, setGalleries] = useState<Gallery[]>([]);
 	useEffect(() => {
 		const initializeGalleries = async () => {
@@ -54,9 +54,8 @@ type Market = WPTerm<"market">;
 type Client = WPTerm<"client">;
 
 export const useTerms = () => {
-	const termSlugs = ["market", "client"];
 	const baseURL =
-			"https://innovativefitness.ahn2k5uj-liquidwebsites.com/wp-json/wp/v2";
+			"https://innovativefit.com/wp-json/wp/v2";
 	const fetchAllMarkets = async (): Promise<Market[]> => {
     try {
         const res = await fetch(
@@ -94,14 +93,12 @@ export const useTerms = () => {
 	const initializeTerms = async () => {
 		const data = await Promise.all([fetchAllMarkets(), fetchAllClients()]);
 		const [markets, clients] = await data;
-		// console.log(markets);
 		const activeMarkets = markets.map((m) => {
 			return {
 				...m,
 				active: true
 			}
 		});
-		// console.log(activeMarkets);
 		setTerms({markets: activeMarkets, clients});
 	}
 

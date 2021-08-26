@@ -30,8 +30,6 @@ export default ({
   const [marketsList, setMarketsList] = useState<WPTerm<"market">[]>([]);
   const [activeTerms, setActiveTerms] = useState<string[]>([]);
 
-	useEffect(() => console.log(allClients), [allClients])
-
   useEffect(() => {
     setActiveTerms(
       marketsList.filter(({ active }) => active).map(({ slug }) => slug)
