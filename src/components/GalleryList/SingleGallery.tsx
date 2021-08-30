@@ -86,7 +86,7 @@ export default ({
               className={styles.cardHeader}
               title={decode(gallery.title.rendered)}
             />
-            {gallery.terms.market.map((m) => (
+            {gallery.terms.market.length > 0 && gallery.terms.market.map((m) => (
               <Chip label={decode(m.name)} color="primary" />
             ))}
             {gallery.acf.attributes && gallery.acf.attributes.custom_item ? (
