@@ -314,7 +314,7 @@ export const App = () => {
                     {galleriesByClient[term][0].terms.client[0] && decode(galleriesByClient[term][0].terms.client[0].name)}
                   </h1>
                   <GalleryList>
-                    {galleriesByClient[term].map((g) => {
+                    {galleriesByClient[term] && galleriesByClient[term].map((g) => {
                       return (
                         <li>
                           <SingleGallery
