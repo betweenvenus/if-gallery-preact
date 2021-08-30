@@ -279,12 +279,12 @@ export const App = () => {
 										let this nonsense be it */}
                 <h1
                   className="group-heading"
-                  id={galleriesByMarket[term][0].terms.market[0].slug}
+                  id={galleriesByMarket[term][0].terms.market.length > 0 && galleriesByMarket[term][0].terms.market[0].slug}
                 >
-                  {decode(galleriesByMarket[term][0].terms.market[0].name)}
+                  {galleriesByMarket[term][0].terms.market.length > 0 && decode(galleriesByMarket[term][0].terms.market[0].name)}
                 </h1>
                 <GalleryList>
-                  {galleriesByMarket[term].map((g) => {
+                  {galleriesByMarket[term].length > 0 && galleriesByMarket[term].map((g) => {
                     return (
                       <li>
                         <SingleGallery
