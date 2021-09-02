@@ -34,7 +34,7 @@ export const useGalleryData = (): Gallery[] => {
 			try {
         const res = await fetch(
             `${baseURL}/galleries?${new URLSearchParams({
-                _fields: "title,date,slug,acf.photos,acf.attributes,terms,id",
+                _fields: "title,date,slug,acf.photos,acf.attributes,acf.video,terms,id",
                 per_page: "100",
             }).toString()}`
         );

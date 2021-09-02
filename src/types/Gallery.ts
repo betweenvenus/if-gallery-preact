@@ -65,6 +65,7 @@ export interface Gallery {
   acf: {
 		attributes: {custom_item: boolean, unique_item: boolean};
     photos: GalleryPhoto[];
+		video: string;
   };
   terms: {
     market: WPTerm<"market">[];

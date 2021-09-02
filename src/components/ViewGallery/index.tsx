@@ -8,13 +8,31 @@ import { StateUpdater, useState } from "preact/hooks";
 
 const convertToImageGalleryFormat = (
   gallery: Gallery
-): { original: string; thumbnail: string }[] => {
-  return gallery.acf.photos.map(({ photo }) => {
+): { original: string; thumbnail: string, embedUrl?: string }[] => {
+  const photosMap = gallery.acf.photos.map(({ photo }): {
+		thumbnail: string,
+		original: string,
+		embedUrl?: string,
+		renderItem?: (item: any) => JSX.Element
+	} => {
     return {
       thumbnail: photo.sizes.medium,
       original: photo.sizes.large,
     };
   });
+	if (gallery.acf.video) {
+		const videoID = gallery.acf.video.split('?v=').pop();
+		const videoEmbed = `https://www.youtube.com/embed/${videoID}`;
+		photosMap.unshift({
+			thumbnail: "https://innovativefit.com/wp-content/uploads/2021/09/if-video-placeholder.png",
+			original: "",
+			embedUrl: videoEmbed,
+			renderItem: (item) => (
+				<iframe width="100%" height="500px" src={videoEmbed} title="YouTube video player" frameBorder="0" autoplay="true" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+			),
+		});
+	}
+	return photosMap;
 };
 
 export default ({

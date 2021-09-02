@@ -61,7 +61,6 @@ export default ({
   setSelectedGallery: StateUpdater<number>;
   attribute: string;
 }) => {
-  //@ts-ignore
   const classes = useStyles();
   if (
     attribute === "all" ||
