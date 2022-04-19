@@ -1,10 +1,12 @@
 .single-gallery-view {
 	z-index: 999 !important;
-	background-color: rgba(0, 0, 0, .8) !important;
+	background-color: rgba(0, 0, 0, .85) !important;
 }
 
 .single-gallery-view .single-gallery-container {
-	max-width: 1200px;
+	width: 100%;
+	margin: 0 60px;
+	max-width: 800px;
 }
 
 .single-gallery-view .image-gallery-image {

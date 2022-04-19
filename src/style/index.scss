@@ -7,6 +7,10 @@ $purple: #682875;
 @import "~react-image-gallery/styles/scss/image-gallery.scss";
 // @import "https://fonts.googleapis.com/css2?family=Roboto:wght@100;400&display=swap";
 
+html {
+	scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   font-family: "Roboto Light", Helvetica, Arial, sans;
@@ -75,8 +79,13 @@ button:focus {
   overflow: hidden;
 }
 
-.image-gallery-icon {
+.image-gallery-right-nav,
+.image-gallery-left-nav {
 	top: 50% !important;
+}
+
+.image-gallery-icon {
+	position: absolute !important;
 }
 
 .gallery-thumbnails li {
@@ -100,4 +109,77 @@ button:focus {
 .image-gallery-thumbnail.active,
 .image-gallery-thumbnail:hover {
   border-color: $purple;
+}
+
+.filter-container {
+	width: 100%;
+}
+
+.filter-selector.filter-accordion {
+	background-color: #f2f2f2;
+}
+
+.filter-items-container {
+	display: flex;
+	flex-flow: column;
+}
+
+.filter-selector-wrapper {
+	max-width: 1000px;
+}
+
+.filter-selector-items {
+	display: flex;
+	justify-content: space-between;
+	list-style-type: none;
+	flex-wrap: wrap;
+	padding-left: 0;
+}
+
+.group-heading {
+	margin-left: 75px;
+	font-size: 32px;
+	font-weight: 200;
+}
+
+.client-link {
+	display: inline-block;
+	margin: 5px 5px 5px 0;
+	font-weight: bold;
+	font-size: 16px;
+	line-height: 1;
+	color: $purple;
+}
+
+.client-link-heading {
+	font-weight: bold;
+	font-size: 1.1rem;
+}
+
+.clients-alphabetical {
+	margin-left: 20px;
+	display: flex;
+	flex-flow: column;
+	min-height: 300px;
+	height: 100%;
+	max-height: 650px;
+	flex-wrap: wrap;
+}
+
+.client-links {
+	margin: 0 20px 20px 0;
+}
+
+.client-links ul {
+	list-style-type: none;
+	padding-left: 0;
+}
+
+.filters-right {
+	display: flex;
+	flex-flow: column;
+}
+
+.default-sort {
+	margin-bottom: 20px;
 }

@@ -7,3 +7,31 @@
 	display: inline-block;
 	margin-left: 40px;
 }
+
+.client-name {
+	color: gray;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+.card-header {
+	padding-left: 0 !important;
+	padding-top: 0 !important;
+}
+
+.card-header * {
+	font-size: 1.75rem !important;
+	font-weight: 200 !important;
+}
+
+.gallery-card {
+	box-shadow: 0 14px 28px rgba(0,0,0,0.09), 0 10px 10px rgba(0,0,0,0.03) !important;
+}
+
+.custom-item {
+	margin-top: 20px !important;
+	opacity: 0.75 !important;
+	color: #682875 !important;
+	display: flex;
+	align-items: center;
+}
