@@ -21,7 +21,7 @@ export default ({ mode, setMode }: {mode: string, setMode: StateUpdater<string>}
 					Markets
 				</MenuItem>
 				<MenuItem value={"client"} className={styles.filterSelectItem}>
-					Clients
+					List
 				</MenuItem>
 			</Select>
 		</FormControl>

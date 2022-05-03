@@ -28,6 +28,7 @@ const convertToImageGalleryFormat = (
 			original: "",
 			embedUrl: videoEmbed,
 			renderItem: (item) => (
+        //@ts-ignore
 				<iframe width="100%" height="500px" src={videoEmbed} title="YouTube video player" frameBorder="0" autoplay="true" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 			),
 		});
