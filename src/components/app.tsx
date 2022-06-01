@@ -121,6 +121,12 @@ export const App = () => {
     }
   }, [query]);
 
+	useEffect(() => {
+		window.addEventListener("hashchange", () => {
+			setSelectedGallery(0);
+		})
+	}, [])
+
   const [galleriesByMarket, setGalleriesByMarket] = useState({});
 
   useEffect(() => {

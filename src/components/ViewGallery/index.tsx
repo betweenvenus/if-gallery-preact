@@ -5,6 +5,7 @@ import { Backdrop } from "@material-ui/core";
 import { Gallery } from "../../types/Gallery";
 import { CircularProgress } from "@material-ui/core";
 import { StateUpdater, useState } from "preact/hooks";
+import { getYouTubeID } from "../../util";
 
 const convertToImageGalleryFormat = (
   gallery: Gallery
@@ -21,7 +22,10 @@ const convertToImageGalleryFormat = (
     };
   });
 	if (gallery.acf.video) {
-		const videoID = gallery.acf.video.split('?v=').pop();
+		const videoID = getYouTubeID(gallery.acf.video);
+		if (!videoID) {
+			throw new Error("Couldn't parse video ID");
+		}
 		const videoEmbed = `https://www.youtube.com/embed/${videoID}`;
 		photosMap.unshift({
 			thumbnail: "https://innovativefit.com/wp-content/uploads/2021/09/if-video-placeholder.png",
@@ -66,7 +70,11 @@ export default ({
           onClick={(e) => e.stopPropagation()}
           className={styles.singleGalleryContainer}
         >
-          <h1 className={styles.galleryHeading}>{gallery.title.rendered}</h1>
+          <h1 
+						className={styles.galleryHeading}
+						dangerouslySetInnerHTML={{__html: gallery.title.rendered}}
+					>
+					</h1>
           <ImageGallery
             items={convertToImageGalleryFormat(gallery)}
           />

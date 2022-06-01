@@ -124,3 +124,14 @@ export const theme = createMuiTheme({
 		}
 	}
 });
+
+/**
+ * Get the video ID from a YouTube link
+ */
+export const getYouTubeID = (link: string) => {
+	if (link.includes("youtu.be")) {
+		return link.split("/").pop();
+	} else if (link.includes("youtube.com")) {
+		return link.split("?v=").pop();
+	}
+}
