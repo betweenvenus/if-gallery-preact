@@ -26,20 +26,26 @@ export const useQueryString = (url: string) => {
  * useState variable and setter
  */
 export const useGalleryData = (): Gallery[] => {
-	const baseURL =
-			"https://innovativefit.com/wp-json/wp/v2";
+	const baseURL = "https://innovativefit.com/wp-json/wp/v2";
 	const [galleries, setGalleries] = useState<Gallery[]>([]);
 	useEffect(() => {
 		const initializeGalleries = async () => {
 			try {
-        const res = await fetch(
-            `${baseURL}/galleries?${new URLSearchParams({
-                _fields: "title,date,slug,acf.photos,acf.attributes,acf.video,terms,id",
-                per_page: "100",
-            }).toString()}`
-        );
+				const params = new URLSearchParams({
+					_fields: "title,date,slug,acf.photos,acf.attributes,acf.video,terms,id",
+					per_page: "100",
+				});
+        const res = await fetch(`${baseURL}/galleries?${params.toString()}`);
         if (!res.ok) throw new Error("fetchGallery response error");
-        const allGalleries = await res.json();
+        const allGalleries: Gallery[] = await res.json();
+				const totalPages = parseInt(res.headers.get("x-wp-totalpages") || "0");
+				if (totalPages && totalPages < 2) return setGalleries(allGalleries);
+				for (let i = 2; i <= totalPages; i++) {
+					params.set("page", i.toString());
+					const res = await fetch(`${baseURL}/galleries?{params.toString()}}`);
+					const moreGalleries = await res.json();
+					allGalleries.concat(moreGalleries);
+				}
 				setGalleries(allGalleries);
     } catch (e) {
         console.error(e);
