@@ -8,6 +8,7 @@
         // "checkJs": true,                       /* Report errors in .js files. */
         "jsx": "react",                           /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */
         "jsxFactory": "h",                        /* Specify the JSX factory function to use when targeting react JSX emit, e.g. React.createElement or h. */
+				"jsxFragmentFactory": "React.Fragment",
         // "declaration": true,                   /* Generates corresponding '.d.ts' file. */
         // "sourceMap": true,                     /* Generates corresponding '.map' file. */
         // "outFile": "./",                       /* Concatenate and emit output to single file. */
@@ -54,7 +55,11 @@
         // "emitDecoratorMetadata": true,         /* Enables experimental support for emitting type metadata for decorators. */
 
         /* Advanced Options */
-        "skipLibCheck": true                      /* Skip type checking of declaration files. */
+        "skipLibCheck": true,                      /* Skip type checking of declaration files. */
+				"paths": {
+					"react": ["./node_modules/preact/compat/"],
+					"react-dom": ["./node_modules/preact/compat/"]
+				}
     },
     "include": ["src/**/*", "tests/**/*"]
 }

@@ -9,7 +9,6 @@ import { StateUpdater, useEffect, useState } from "preact/hooks";
 import styles from "./style.scss";
 import MarketChip from "../MarketFilter/MarketChip";
 import { groupBy } from "lodash";
-import { SyntheticEvent } from "react";
 
 interface FilterContainerProps {
   setGalleries: StateUpdater<AllGalleries>;
@@ -22,13 +21,12 @@ interface FilterContainerProps {
 
 export default ({
   allMarkets,
-  setGalleries,
   filterMode,
   setFilterMode,
   allClients,
 }: FilterContainerProps) => {
   const [marketsList, setMarketsList] = useState<WPTerm<"market">[]>([]);
-  const [activeTerms, setActiveTerms] = useState<string[]>([]);
+  const [, setActiveTerms] = useState<string[]>([]);
 
   useEffect(() => {
     setActiveTerms(
@@ -60,6 +58,7 @@ export default ({
       .sort((a, b) => ((a.slug as any) > (b.slug as any) ? 1 : -1))
       .map((market) => (
         <span onClick={() => toggleMarket(market)}>
+					test
           <MarketChip market={market} />
         </span>
       ));
@@ -76,7 +75,7 @@ export default ({
               labelId="filter-selector"
               value={filterMode}
               onChange={(e) =>
-                setFilterMode(e.target.value as "market" | "client")
+                setFilterMode((e?.target as HTMLInputElement).value as "market" | "client")
               }
             >
               <MenuItem value={"market"} className={styles.filterSelectItem}>
@@ -101,7 +100,7 @@ export default ({
               labelId="filter-selector"
               value={filterMode}
               onChange={(e) =>
-                setFilterMode(e.target.value as "market" | "client")
+                setFilterMode((e?.target as HTMLInputElement).value as "market" | "client")
               }
             >
               <MenuItem value={"market"} className={styles.filterSelectItem}>
@@ -118,10 +117,11 @@ export default ({
                   <h2>{key}</h2>
                   <ul>
                     {clients.map((c) => (
-                      <li><Link onClick={(e: SyntheticEvent) => {
-													e.preventDefault();
-													
-											}}>{c.name}</Link></li>
+                      <li>
+												<Link onClick={(e: Event) => e.preventDefault()}>
+													{c.name}
+												</Link>
+											</li>
                     ))}
                   </ul>
                 </div>

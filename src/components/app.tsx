@@ -216,7 +216,7 @@ export const App = () => {
                     name="attributes"
                     value={attribute}
                     row={true}
-                    onChange={(e) => setAttribute(e.target.value)}
+                    onChange={(e) => setAttribute((e?.target as HTMLButtonElement).value)}
                   >
                     <FormControlLabel
                       value="all"

@@ -48,7 +48,7 @@ export default ({
   setSelectedGallery: StateUpdater<number>;
 }) => {
   const [open, setOpen] = useState(true);
-  const toggleBackdrop = (e: React.MouseEvent) => {
+  const toggleBackdrop = (e: MouseEvent) => {
     e.stopPropagation();
     setOpen(!open);
     setSelectedGallery(0);

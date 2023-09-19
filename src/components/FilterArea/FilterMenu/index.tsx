@@ -11,7 +11,7 @@ export default ({ mode, setMode }: {mode: string, setMode: StateUpdater<string>}
 				labelId="filter-selector"
 				value={mode}
 				onChange={(e) =>
-					setMode(e.target.value as "default" | "market" | "client")
+					setMode((e?.target as HTMLInputElement).value as "default" | "market" | "client")
 				}
 			>
 				<MenuItem value={"default"} className={styles.filterSelectItem}>

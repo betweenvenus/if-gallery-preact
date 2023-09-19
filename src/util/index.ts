@@ -1,24 +1,50 @@
 import { createContext } from "preact";
-import { useState, useEffect, StateUpdater } from "preact/hooks";
-import { Gallery, GroupedGallery, WPTerm } from "../types/Gallery";
+import { StateUpdater, useEffect, useState } from "preact/hooks";
+import { Gallery, WPTerm } from "../types/Gallery";
 import { createMuiTheme } from "@material-ui/core";
 
-// export const filterGalleriesByTerms = (
-//   galleries: GroupedGallery,
-//   terms: string[]
-// ): GroupedGallery | {} => {
-//   return Object.keys(galleries).reduce((obj, slug) => {
-// 		if (terms.includes(slug)) {
-// 			obj[slug] = galleries[slug];
-// 		}
-// 		return obj;
-// 	}, {} as any);
-// };
-
 export const useQueryString = (url: string) => {
-	const encodedURL = new URL(url);
-	const [query, setQuery] = useState(encodedURL.search);
-	return query;
+  const encodedURL = new URL(url);
+  const [query] = useState(encodedURL.search);
+  return query;
+};
+
+export const BASE_URL = "https://innovativefit.com/wp-json/wp/v2";
+
+// @ts-ignore
+const returnUniqueAray = (arr: any[]) => [...new Set(arr)];
+
+const getPaginatedData = async<T>(
+	path: string,
+  params: URLSearchParams,
+  callback?: (arg: any) => void
+): Promise<T[]> => {
+  const url = `${BASE_URL}/${path}?${params.toString()}`;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Error retrieving data from ${url}!`);
+    const data: T[] = await res.json();
+    const totalPages = parseInt(res.headers.get("x-wp-totalpages") || "0");
+    if (totalPages && totalPages < 2) {
+			if (callback) callback(data);
+			return data;
+		}
+			debugger;
+    for (let i = 2; i <= totalPages; i++) {
+      params.set("page", i.toString());
+      const res = await fetch(`${BASE_URL}/${path}?${params.toString()}`);
+      const moreData = await res.json();
+			data.push(...moreData);
+    }
+		if (callback) callback(data);
+		return data;
+  } catch (e) {
+		throw e;
+  }
+};
+
+const sortGalleriesAlphabetically = (a: Gallery, b: Gallery) => {
+	return (a.slug.toUpperCase() > b.slug.toUpperCase()) ? 1 : -1;
 }
 
 /**
@@ -26,118 +52,97 @@ export const useQueryString = (url: string) => {
  * useState variable and setter
  */
 export const useGalleryData = (): Gallery[] => {
-	const baseURL = "https://innovativefit.com/wp-json/wp/v2";
-	const [galleries, setGalleries] = useState<Gallery[]>([]);
-	useEffect(() => {
-		const initializeGalleries = async () => {
-			try {
-				const params = new URLSearchParams({
-					_fields: "title,date,slug,acf.photos,acf.attributes,acf.video,terms,id",
-					per_page: "100",
-				});
-        const res = await fetch(`${baseURL}/galleries?${params.toString()}`);
-        if (!res.ok) throw new Error("fetchGallery response error");
-        const allGalleries: Gallery[] = await res.json();
-				const totalPages = parseInt(res.headers.get("x-wp-totalpages") || "0");
-				if (totalPages && totalPages < 2) return setGalleries(allGalleries);
-				for (let i = 2; i <= totalPages; i++) {
-					params.set("page", i.toString());
-					const res = await fetch(`${baseURL}/galleries?{params.toString()}}`);
-					const moreGalleries = await res.json();
-					allGalleries.concat(moreGalleries);
-				}
-				setGalleries(allGalleries);
-    } catch (e) {
-        console.error(e);
-    }
-		};
-		initializeGalleries();
-	}, [])
-	return galleries.sort((a, b) => (a.slug.toUpperCase() > b.slug.toUpperCase()) ? 1 : -1);
-}
+  const [galleries, setGalleries] = useState<Gallery[]>([]);
+  useEffect(() => {
+    const params = new URLSearchParams({
+      _fields: "title,date,slug,acf.photos,acf.attributes,acf.video,terms,id",
+      per_page: "100",
+    });
+    getPaginatedData("galleries", params, setGalleries);
+  }, []);
+  return galleries.sort(sortGalleriesAlphabetically);
+};
 
 type Market = WPTerm<"market">;
 type Client = WPTerm<"client">;
 
 export const useTerms = () => {
-	const baseURL =
-			"https://innovativefit.com/wp-json/wp/v2";
-	const fetchAllMarkets = async (): Promise<Market[]> => {
+  const baseURL = "https://innovativefit.com/wp-json/wp/v2";
+  const fetchAllMarkets = async (): Promise<Market[]> => {
     try {
-        const res = await fetch(
-            `${baseURL}/market?${new URLSearchParams({
-                _fields: "id,name,slug,count",
-								per_page: "100"
-            }).toString()}`
-        );
-        if (!res.ok) throw new Error("failed to load market terms");
-        const json: Market[]  = await res.json();
-        return json.filter(m => m.count > 0);
+      const res = await fetch(
+        `${baseURL}/market?${
+          new URLSearchParams({
+            _fields: "id,name,slug,count",
+            per_page: "100",
+          }).toString()
+        }`,
+      );
+      if (!res.ok) throw new Error("failed to load market terms");
+      const json: Market[] = await res.json();
+      return json.filter((m) => m.count > 0);
     } catch (e) {
-      return e;
+      throw e;
     }
+  };
+
+  const fetchAllClients = async (): Promise<Client[]> => {
+		const params = new URLSearchParams({
+			_fields: "id,name,slug,count",
+			per_page: "100",
+		});
+		try {
+		const clients = await getPaginatedData<Client>("client", params)
+		return clients.filter((m) => m.count > 0);
+    } catch (e) {
+      throw e;
+    }
+  };
+
+  const [terms, setTerms] = useState({});
+
+  const initializeTerms = async () => {
+    const data = await Promise.all([fetchAllMarkets(), fetchAllClients()]);
+    const [markets, clients] = await data;
+    const activeMarkets = markets.map((m) => {
+      return {
+        ...m,
+        active: true,
+      };
+    });
+    setTerms({ markets: activeMarkets, clients });
+  };
+
+  useEffect(() => {
+    initializeTerms();
+  }, []);
+
+  return terms;
 };
 
-	const fetchAllClients = async (): Promise<Client[]> => {
-    try {
-        const res = await fetch(
-            `${baseURL}/client?${new URLSearchParams({
-                _fields: "id,name,slug,count",
-								per_page: "100"
-            }).toString()}`
-        );
-        if (!res.ok) throw new Error("failed to load client terms");
-        const json: Client[]  = await res.json();
-        return json.filter(m => m.count > 0);
-    } catch (e) {
-      return e;
-    }
-	};
-
-	const [terms, setTerms] = useState({});
-
-	const initializeTerms = async () => {
-		const data = await Promise.all([fetchAllMarkets(), fetchAllClients()]);
-		const [markets, clients] = await data;
-		const activeMarkets = markets.map((m) => {
-			return {
-				...m,
-				active: true
-			}
-		});
-		setTerms({markets: activeMarkets, clients});
-	}
-
-	useEffect(() => {
-		initializeTerms();
-	}, []);
-
-	return terms;
-}
-
 export const QueryContext = createContext({
-	query: new URLSearchParams(),
-	setQuery: () => {}
-} as {query: URLSearchParams, setQuery: StateUpdater<URLSearchParams>});
+  query: new URLSearchParams(),
+  setQuery: () => {},
+} as { query: URLSearchParams; setQuery: StateUpdater<URLSearchParams> });
 
 /**
  * Custom theme for Material UI
  */
 export const theme = createMuiTheme({
-	palette: {
-		primary: {
-			main: "#682875"
-		}
-	}
+  palette: {
+    primary: {
+      main: "#682875",
+    },
+  },
 });
 
 /**
  * Get the video ID from a YouTube link
  */
 export const getYouTubeID = (link: string) => {
-	if (link.includes("youtu.be")) {
-		return link.split("/").pop();
-	} else if (link.includes("youtube.com")) {
-		return link.split("?v=").pop();
-	}
-}
+  if (link.includes("youtu.be")) {
+    return link.split("/").pop();
+  } else if (link.includes("youtube.com")) {
+    return link.split("?v=").pop();
+  }
+};

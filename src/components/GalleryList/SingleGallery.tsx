@@ -86,7 +86,8 @@ export default ({
               title={decode(gallery.title.rendered)}
             />
             {gallery.terms.market.length > 0 && gallery.terms.market.map((m) => (
-              <Chip label={decode(m.name)} color="primary" />
+										 // @ts-ignore
+              <Chip style="margin:0 5px 10px 0;" label={decode(m.name)} color="primary" />
             ))}
             {gallery.acf.attributes && gallery.acf.attributes.custom_item ? (
               <div className={styles.customItem}>
